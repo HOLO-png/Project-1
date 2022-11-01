@@ -11,12 +11,12 @@ function App() {
       <div id="App" >
         <div className="container">
           <Intro />
-          <hr />
+          {/* <hr />
           <Setup />
           <hr />
           <Demo />
           <hr />
-          <Footer />
+          <Footer /> */}
         </div>
       </div>
     </EthProvider>

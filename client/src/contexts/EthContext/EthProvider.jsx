@@ -6,31 +6,63 @@ import { reducer, actions, initialState } from "./state";
 function EthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const init = useCallback(
-    async artifact => {
-      if (artifact) {
-        const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-        const accounts = await web3.eth.requestAccounts();
-        const networkID = await web3.eth.net.getId();
-        const { abi } = artifact;
-        let address, contract;
+  const init = useCallback(async (artifact) => {
+    const { myTokenSale, myToken, kycContract } = artifact;
+    if (myTokenSale && myToken && kycContract) {
+      const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+      const accounts = await web3.eth.requestAccounts();
+      const networkID = await web3.eth.net.getId();
+      const { abi: myTokenSaleAbi } = myTokenSale;
+      const { abi: myTokenAbi } = myToken;
+      const { abi: kycAbi } = kycContract;
+
+      if (networkID === 5777) {
+        let myTokenAddress,
+          myTokenSaleAddress,
+          kycAddress,
+          tokenInstance,
+          tokenSaleInstance,
+          kycInstance;
+
         try {
-          address = artifact.networks[networkID].address;
-          contract = new web3.eth.Contract(abi, address);
+          myTokenAddress = myToken.networks[networkID].address;
+          myTokenSaleAddress = myTokenSale.networks[networkID].address;
+          kycAddress = kycContract.networks[networkID].address;
+          tokenInstance = new web3.eth.Contract(myTokenAbi, myTokenAddress);
+          tokenSaleInstance = new web3.eth.Contract(
+            myTokenSaleAbi,
+            myTokenSaleAddress
+          );
+          console.log(kycAddress);
+          kycInstance = new web3.eth.Contract(kycAbi, kycAddress);
         } catch (err) {
           console.error(err);
         }
+
         dispatch({
           type: actions.init,
-          data: { artifact, web3, accounts, networkID, contract }
+          data: {
+            artifact,
+            web3,
+            accounts,
+            networkID,
+            contracts: { tokenInstance, tokenSaleInstance, kycInstance },
+            loaded: true,
+          },
         });
+      } else {
+        alert("Network ID: " + networkID + " is correct");
       }
-    }, []);
+    }
+  }, []);
 
   useEffect(() => {
     const tryInit = async () => {
       try {
-        const artifact = require("../../contracts/SimpleStorage.json");
+        const myToken = require("../../contracts/MyToken.json");
+        const myTokenSale = require("../../contracts/MyTokenSale.json");
+        const kycContract = require("../../contracts/KycContract.json");
+        const artifact = { myToken, myTokenSale, kycContract };
         init(artifact);
       } catch (err) {
         console.error(err);
@@ -46,17 +78,20 @@ function EthProvider({ children }) {
       init(state.artifact);
     };
 
-    events.forEach(e => window.ethereum.on(e, handleChange));
+    events.forEach((e) => window.ethereum.on(e, handleChange));
     return () => {
-      events.forEach(e => window.ethereum.removeListener(e, handleChange));
+      events.forEach((e) => window.ethereum.removeListener(e, handleChange));
     };
   }, [init, state.artifact]);
 
+  if (!state.loaded) return <h1>loading ....</h1>;
   return (
-    <EthContext.Provider value={{
-      state,
-      dispatch
-    }}>
+    <EthContext.Provider
+      value={{
+        state,
+        dispatch,
+      }}
+    >
       {children}
     </EthContext.Provider>
   );
