@@ -16,13 +16,18 @@ function EthProvider({ children }) {
       const { abi: myTokenAbi } = myToken;
       const { abi: kycAbi } = kycContract;
 
+      // let userTokens = await tokenInstance.methods
+      //   .balanceOf(state.accounts[0])
+      //   .call();
+
       if (networkID === 5777) {
         let myTokenAddress,
           myTokenSaleAddress,
           kycAddress,
           tokenInstance,
           tokenSaleInstance,
-          kycInstance;
+          kycInstance,
+          userTokens;
 
         try {
           myTokenAddress = myToken.networks[networkID].address;
@@ -33,11 +38,36 @@ function EthProvider({ children }) {
             myTokenSaleAbi,
             myTokenSaleAddress
           );
-          console.log(kycAddress);
           kycInstance = new web3.eth.Contract(kycAbi, kycAddress);
         } catch (err) {
           console.error(err);
         }
+
+        const updateUserTokens = async () => {
+          if (state.tokenInstance !== undefined) {
+            userTokens = await state.tokenInstance.methods
+              .balanceOf(state.accounts[0])
+              .call();
+
+            dispatch({
+              type: actions.init,
+              data: {
+                ...state,
+                userTokens,
+              },
+            });
+          }
+        };
+        updateUserTokens();
+
+        const listenToTokenTransfer = () => {
+          if (state.tokenInstance !== undefined) {
+            state.tokenInstance.events
+              .Transfer({ to: state.accounts[0] })
+              .on("data", updateUserTokens);
+          }
+        };
+        listenToTokenTransfer();
 
         dispatch({
           type: actions.init,
@@ -48,6 +78,9 @@ function EthProvider({ children }) {
             networkID,
             contracts: { tokenInstance, tokenSaleInstance, kycInstance },
             loaded: true,
+            tokenSaleAddress: myTokenSale.networks[networkID].address,
+            tokenInstance,
+            tokenSaleInstance
           },
         });
       } else {
@@ -84,7 +117,7 @@ function EthProvider({ children }) {
     };
   }, [init, state.artifact]);
 
-  if (!state.loaded) return <h1>loading ....</h1>;
+  if (!state.loaded) return <h1>loading 2 ....</h1>;
   return (
     <EthContext.Provider
       value={{

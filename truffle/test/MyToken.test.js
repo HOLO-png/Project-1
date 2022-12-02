@@ -8,6 +8,11 @@ const BN = web3.utils.BN;
 contract('Token Test', function (accounts) {
   const [deployerAccount, recipient] = accounts;
 
+  console.log({
+    deployerAccount,
+    recipient,
+  });
+
   beforeEach(async () => {
     this.myToken = await Token.new(process.env.INITIAL_TOKENS)
   })

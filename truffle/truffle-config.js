@@ -72,11 +72,11 @@ module.exports = {
     // },
     //
     // Useful for private networks
-    // private: {
-    //   provider: () => new HDWalletProvider(mnemonic, `https://network.io`),
-    //   network_id: 2111,   // This network is yours, in the cloud.
-    //   production: true    // Treats this network as if it was a public net. (default: false)
-    // }
+    etherium: {
+      provider: () => new HDWalletProvider(mnemonic, `https://mainnet.infura.io/v3/96438137b239494c99895b600c73f097`),
+      network_id: 1,   // This network is yours, in the cloud.
+      production: true    // Treats this network as if it was a public net. (default: false)
+    }
   },
 
   // Set default mocha options here, use special reporters, etc.

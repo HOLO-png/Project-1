@@ -20,6 +20,17 @@ function Welcome() {
     }
   };
 
+  const handleBuyTokens = async () => {
+    if (state.tokenInstance !== undefined) {
+      await state.tokenSaleInstance.methods.buyTokens(state.accounts[0]).send({
+        from: state.accounts[0],
+        value: state.web3.utils.toWei("1", "wei"),
+      });
+    }
+  };
+
+  // updateUserToken()
+
   return (
     <div className="welcome">
       <h1>👋 Cappuccino Token Sale !</h1>
@@ -35,6 +46,13 @@ function Welcome() {
       <button type="button" onClick={handleKycWhiteListSubmit}>
         Add to WhiteList
       </button>
+      <h2>Buy Token</h2>
+      <p>
+        If you want to buy tokens, send Wei to this address:{" "}
+        {state.tokenSaleAddress}
+      </p>
+      <p>Your currently have: {state.userTokens} CAPPU tokens.</p>
+      <button onClick={handleBuyTokens}>Buy more tokens</button>
     </div>
   );
 }
