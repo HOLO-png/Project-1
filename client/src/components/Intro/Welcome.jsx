@@ -6,9 +6,9 @@ function Welcome() {
 
   const { state } = useContext(EthContext);
 
-  console.log(state);
   const handleKycWhiteListSubmit = async () => {
     if (state.contracts && state.accounts) {
+      console.log(state.accounts[0]);
       if (kycAddress.length > 15) {
         await state.contracts.kycInstance.methods
           .setKycCompleted(kycAddress)
@@ -21,6 +21,7 @@ function Welcome() {
   };
 
   const handleBuyTokens = async () => {
+    console.log(state.tokenInstance);
     if (state.tokenInstance !== undefined) {
       await state.tokenSaleInstance.methods.buyTokens(state.accounts[0]).send({
         from: state.accounts[0],

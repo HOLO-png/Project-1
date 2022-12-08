@@ -10,7 +10,7 @@ const initialState = {
   networkID: null,
   contracts: null,
   tokenSaleAddress: null,
-  userTokens: 0
+  userTokens: 1,
 };
 
 const reducer = (state, action) => {
@@ -23,8 +23,4 @@ const reducer = (state, action) => {
   }
 };
 
-export {
-  actions,
-  initialState,
-  reducer
-};
+export { actions, initialState, reducer };

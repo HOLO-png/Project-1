@@ -5,7 +5,7 @@
  * them to suit your project as necessary.
  *
  * More information about configuration can be found at:
- * 
+ *
  * https://trufflesuite.com/docs/truffle/reference/configuration
  *
  * To deploy via Infura you'll need a wallet provider (like @truffle/hdwallet-provider)
@@ -18,11 +18,11 @@
  *
  */
 
-// require('dotenv').config();
-// const mnemonic = process.env["MNEMONIC"];
+require("dotenv").config();
+const mnemonic = process.env["MNEMONIC"];
 // const infuraProjectId = process.env["INFURA_PROJECT_ID"];
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 module.exports = {
   /**
@@ -44,9 +44,9 @@ module.exports = {
     // options below to some value.
     //
     development: {
-     host: "127.0.0.1",     // Localhost (default: none)
-     port: 7545,            // Standard Ethereum port (default: none)
-     network_id: "5777",       // Any network (default: none)
+      host: "127.0.0.1", // Localhost (default: none)
+      port: 7545, // Standard Ethereum port (default: none)
+      network_id: "5777", // Any network (default: none)
     },
     //
     // An additional network, but with some advanced options…
@@ -61,22 +61,41 @@ module.exports = {
     //
     // Useful for deploying to a public network.
     // Note: It's important to wrap the provider as a function to ensure truffle uses a new provider every time.
-    // goerli: {
-    //   provider: () => new HDWalletProvider(mnemonic, `https://goerli.infura.io/v3/${infuraProjectId}`),
-    //   network_id: 5,       // Goerli's network id
-    //   chain_id: 5,         // Goerli's chain id
-    //   gas: 5500000,        // Gas limit used for deploys.
-    //   confirmations: 2,    // # of confirmations to wait between deployments. (default: 0)
-    //   timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
-    //   skipDryRun: true     // Skip dry run before migrations? (default: false for public nets)
-    // },
+    goerli: {
+      provider: () =>
+        new HDWalletProvider(
+          ["791311c83cdb8f6537457bdfccc7dd4ee5ba659e5d888dc2956476fa7bc15f6a"],
+          `https://goerli.infura.io/v3/4e41ef8e48f44df79bb859fba86e9dc3`,
+          0,
+          1
+        ),
+      network_id: 5, // Goerli's network id
+      chain_id: 5, // Goerli's chain id
+      gas: 5500000, // Gas limit used for deploys.
+      confirmations: 2, // # of confirmations to wait between deployments. (default: 0)
+      timeoutBlocks: 200, // # of blocks before a deployment times out  (minimum/default: 50)
+      skipDryRun: true, // Skip dry run before migrations? (default: false for public nets)
+    },
     //
     // Useful for private networks
-    etherium: {
-      provider: () => new HDWalletProvider(mnemonic, `https://mainnet.infura.io/v3/96438137b239494c99895b600c73f097`),
-      network_id: 1,   // This network is yours, in the cloud.
-      production: true    // Treats this network as if it was a public net. (default: false)
-    }
+    // private: {
+    //   provider: () => new HDWalletProvider(mnemonic, `https://network.io`),
+    //   network_id: 2111,   // This network is yours, in the cloud.
+    //   production: true    // Treats this network as if it was a public net. (default: false)
+    // },
+    matic: {
+      provider: () =>
+        new HDWalletProvider(
+          mnemonic,
+          `https://polygon-mumbai.g.alchemy.com/v2/XGw5DxJES13baBpLdsEWLROrIkOMfVnz`,
+          0,
+          5
+        ),
+      network_id: 80001,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+    },
   },
 
   // Set default mocha options here, use special reporters, etc.
@@ -87,7 +106,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.8.1",      // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.8.1", // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
@@ -96,7 +115,7 @@ module.exports = {
       //  },
       //  evmVersion: "byzantium"
       // }
-    }
+    },
   },
 
   // Truffle DB is currently disabled by default; to enable it, change enabled:

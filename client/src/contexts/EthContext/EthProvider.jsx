@@ -6,88 +6,87 @@ import { reducer, actions, initialState } from "./state";
 function EthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const init = useCallback(async (artifact) => {
-    const { myTokenSale, myToken, kycContract } = artifact;
-    if (myTokenSale && myToken && kycContract) {
-      const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
-      const accounts = await web3.eth.requestAccounts();
-      const networkID = await web3.eth.net.getId();
-      const { abi: myTokenSaleAbi } = myTokenSale;
-      const { abi: myTokenAbi } = myToken;
-      const { abi: kycAbi } = kycContract;
+  const init = useCallback(
+    async (artifact) => {
+      const { myTokenSale, myToken, kycContract } = artifact;
+      if (myTokenSale && myToken && kycContract) {
+        const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+        const accounts = await web3.eth.requestAccounts();
+        const networkID = await web3.eth.net.getId();
+        const { abi: myTokenSaleAbi } = myTokenSale;
+        const { abi: myTokenAbi } = myToken;
+        const { abi: kycAbi } = kycContract;
 
-      // let userTokens = await tokenInstance.methods
-      //   .balanceOf(state.accounts[0])
-      //   .call();
-
-      if (networkID === 5777) {
-        let myTokenAddress,
-          myTokenSaleAddress,
-          kycAddress,
-          tokenInstance,
-          tokenSaleInstance,
-          kycInstance,
-          userTokens;
-
-        try {
-          myTokenAddress = myToken.networks[networkID].address;
-          myTokenSaleAddress = myTokenSale.networks[networkID].address;
-          kycAddress = kycContract.networks[networkID].address;
-          tokenInstance = new web3.eth.Contract(myTokenAbi, myTokenAddress);
-          tokenSaleInstance = new web3.eth.Contract(
-            myTokenSaleAbi,
-            myTokenSaleAddress
-          );
-          kycInstance = new web3.eth.Contract(kycAbi, kycAddress);
-        } catch (err) {
-          console.error(err);
-        }
-
-        const updateUserTokens = async () => {
-          if (state.tokenInstance !== undefined) {
-            userTokens = await state.tokenInstance.methods
-              .balanceOf(state.accounts[0])
-              .call();
-
-            dispatch({
-              type: actions.init,
-              data: {
-                ...state,
-                userTokens,
-              },
-            });
-          }
-        };
-        updateUserTokens();
-
-        const listenToTokenTransfer = () => {
-          if (state.tokenInstance !== undefined) {
-            state.tokenInstance.events
-              .Transfer({ to: state.accounts[0] })
-              .on("data", updateUserTokens);
-          }
-        };
-        listenToTokenTransfer();
-
-        dispatch({
-          type: actions.init,
-          data: {
-            artifact,
-            web3,
-            accounts,
-            networkID,
-            contracts: { tokenInstance, tokenSaleInstance, kycInstance },
-            loaded: true,
-            tokenSaleAddress: myTokenSale.networks[networkID].address,
+        if (networkID === 5) {
+          let myTokenAddress,
+            myTokenSaleAddress,
+            kycAddress,
             tokenInstance,
-            tokenSaleInstance
-          },
-        });
-      } else {
-        alert("Network ID: " + networkID + " is correct");
+            tokenSaleInstance,
+            kycInstance,
+            userTokens;
+
+          try {
+            myTokenAddress = myToken.networks[networkID].address;
+            myTokenSaleAddress = myTokenSale.networks[networkID].address;
+            kycAddress = kycContract.networks[networkID].address;
+            tokenInstance = new web3.eth.Contract(myTokenAbi, myTokenAddress);
+            tokenSaleInstance = new web3.eth.Contract(
+              myTokenSaleAbi,
+              myTokenSaleAddress
+            );
+            kycInstance = new web3.eth.Contract(kycAbi, kycAddress);
+          } catch (err) {
+            console.error(err);
+          }
+
+          const updateUserTokens = async () => {
+            if (tokenInstance !== undefined) {
+              userTokens = await tokenInstance.methods
+                .balanceOf(accounts[0])
+                .call();
+
+              dispatch({
+                type: actions.init,
+                data: {
+                  ...state,
+                  userTokens,
+                },
+              });
+            }
+          };
+          updateUserTokens();
+
+          const listenToTokenTransfer = () => {
+            if (tokenInstance !== undefined) {
+              tokenInstance.events
+                .Transfer({ to: accounts[0] })
+                .on("data", updateUserTokens);
+            }
+          };
+
+          listenToTokenTransfer();
+          dispatch({
+            type: actions.init,
+            data: {
+              artifact,
+              web3,
+              accounts,
+              networkID,
+              contracts: { tokenInstance, tokenSaleInstance, kycInstance },
+              loaded: true,
+              tokenSaleAddress: myTokenSale.networks[networkID].address,
+              tokenInstance,
+              tokenSaleInstance,
+            },
+          });
+        } else {
+          alert("Network ID: " + networkID + " is correct");
+        }
       }
-    }
-  }, []);
+    },
+    [state.loaded]
+  );
 
   useEffect(() => {
     const tryInit = async () => {

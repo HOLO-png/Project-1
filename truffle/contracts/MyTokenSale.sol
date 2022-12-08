@@ -17,6 +17,8 @@ contract MyTokenSale is Crowdsale {
         kyc = _kyc;
     }
 
+    fallback() external payable {}
+
     function _preValidatePurchase(address beneficiary, uint256 weiAmount)
         internal
         view
