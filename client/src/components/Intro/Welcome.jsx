@@ -1,6 +1,14 @@
 import { useContext, useState } from "react";
+import styled from "styled-components";
 import { EthContext } from "../../contexts/EthContext";
 
+const WelcomeEle = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 20px;
+`;
 function Welcome() {
   const [kycAddress, setKycAddress] = useState("0x234...");
 
@@ -33,7 +41,7 @@ function Welcome() {
   // updateUserToken()
 
   return (
-    <div className="welcome">
+    <WelcomeEle className="welcome">
       <h1>👋 Cappuccino Token Sale !</h1>
       <p>Get your token today</p>
       <h2>Kyc Whitelisting</h2>
@@ -54,7 +62,7 @@ function Welcome() {
       </p>
       <p>Your currently have: {state.userTokens} CAPPU tokens.</p>
       <button onClick={handleBuyTokens}>Buy more tokens</button>
-    </div>
+    </WelcomeEle>
   );
 }
 

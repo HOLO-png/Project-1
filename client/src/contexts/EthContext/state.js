@@ -11,6 +11,7 @@ const initialState = {
   contracts: null,
   tokenSaleAddress: null,
   userTokens: 1,
+  userAddress: "",
 };
 
 const reducer = (state, action) => {

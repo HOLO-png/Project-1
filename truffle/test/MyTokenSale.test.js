@@ -43,7 +43,7 @@ contract("TokenSale Test", function (accounts) {
       })
     ).to.be.fulfilled;
 
-    balanceBefore = balanceBefore.add(new BN(1))
+    balanceBefore = balanceBefore.add(new BN(1));
 
     return expect(
       tokenInstance.balanceOf(deployerAccount)

@@ -1,25 +1,35 @@
 import { EthProvider } from "./contexts/EthContext";
-import Intro from "./components/Intro/";
-import Setup from "./components/Setup";
-import Demo from "./components/Demo";
-import Footer from "./components/Footer";
 import "./App.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import CreateNFTs from "./pages/CreateNFTs";
+import Header from "./components/Header";
+import MyAssets from "./pages/MyAssets";
+import NotFound from "./pages/NotFound";
+import ReSellNFT from "./pages/ReSellNFT";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
-    <EthProvider>
-      <div id="App" >
-        <div className="container">
-          <Intro />
-          {/* <hr />
-          <Setup />
-          <hr />
-          <Demo />
-          <hr />
-          <Footer /> */}
+    <BrowserRouter>
+      <EthProvider>
+        <div className="container-fluid">
+          <div className="card card1 p-2">
+            <div className="innercard p-2">
+              <Header />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/create-nft" element={<CreateNFTs />} />
+                <Route path="/my-nft" element={<MyAssets />} />
+                <Route path="/resell-nft" element={<ReSellNFT />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
+          </div>
         </div>
-      </div>
-    </EthProvider>
+      </EthProvider>
+    </BrowserRouter>
   );
 }
 

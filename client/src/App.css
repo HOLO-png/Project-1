@@ -1,143 +1,150 @@
-#App {
-  width: 100%;
-  height: 100%;
+* {
+  margin: 0;
+  padding: 0;
+}
+body > iframe {
+  pointer-events: none;
+}
+body {
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
-  --primary-color: #1266cc;
-  --secondary-color: #f96400;
-  --flash-color: rgb(89, 255, 0);
-  --gray: #999;
-  --light-gray: #e0e0e0;
-  --dark-gray: #777;
-}
-
-#App .container {
-  width: 40%;
-  min-width: 60rem;
-  max-width: 75rem;
-  height: 100%;
-}
-
-code {
-  display: block;
-  white-space: pre-wrap;
-  padding: 1.2rem 2rem;
-  border-radius: 1rem;
-  background-color: var(--light-gray);
-  font-size: 1.4rem;
-}
-
-code span {
-  transition: all 0.3s;
-}
-
-code span.primary-color {
-  color: var(--primary-color);
-}
-
-code span.secondary-color {
-  color: var(--secondary-color);
-}
-
-code span.dim-color {
-  color: var(--gray);
-}
-
-code span.flash {
-  background-color: var(--flash-color);
-}
-
-details {
-  margin: 1.6rem 0;
-  padding: 0.5rem 2rem 0.5rem 0;
-  border: 1px solid var(--light-gray);
-  border-radius: 1rem;
-}
-
-details :not(summary, span) {
-  margin-left: 2.55rem;
-}
-
-details summary {
-  padding: 1.2rem;
-  cursor: pointer;
-}
-
-p,
-details code {
-  margin-top: 1rem;
-  margin-bottom: 1.4rem;
-}
-
-p {
-  line-height: 2.6rem;
-}
-
-p span.code {
-  font-family: monospace;
-  color: var(--gray);
-}
-
-hr {
-  margin: 4rem 0;
-}
-
-#App .container .welcome h1 {
-  padding-top: 7.5rem;
-  font-size: 2.6rem;
-}
-
-#App .container .demo .contract-container {
-  display: flex;
-}
-
-#App .container .demo .contract-container code {
-  min-width: 42rem;
-  border-radius: 1rem 0 0 1rem;
-}
-
-#App .container .demo .contract-container .btns {
+  align-items: center;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  padding: 0 1rem;
-  background-color: var(--gray);
-  border-radius: 0 1rem 1rem 0;
 }
-
-#App .container .demo .contract-container .btns>* {
-  width: 12rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem 0;
-  background-color: var(--light-gray);
+.card {
+  width: 100%;
+  border-radius: 13px;
+}
+.card1 {
+  background-color: #5390b5;
+  width: 100%;
+}
+.innercard {
+  width: 100%;
+  background-color: #eef8fe;
+  border-radius: 11px;
+}
+.btn {
+  height: 35px;
+  width: 120px;
   border: none;
-  font-size: 1.2rem;
-  font-family: monospace;
+  background-color: #119cff;
+  font-size: 12px;
+  color: #fff;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn:hover {
+  background-color: #000;
+}
+.btn:focus {
+  box-shadow: none;
+  outline: none;
+}
+.btn1 {
+  height: 35px;
+  width: 120px;
+  border: none;
+  font-size: 13px;
+  background-color: #fff;
+  border-radius: 5px;
   cursor: pointer;
 }
-
-#App .container .demo .contract-container .btns>*:hover {
-  background-color: var(--dark-gray);
+.btn2 {
+  height: 35px;
+  width: 120px;
+  border: none;
+  background-color: #fd4d86;
+  font-size: 12px;
+  color: #fff;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
-#App .container .demo .contract-container .btns .input-btn input {
-  width: 4rem;
-  text-align: center;
-  font-family: monospace;
-  font-size: 1.2rem;
+.btn2:hover {
+  background-color: #af1d4c;
 }
-
-#App .container footer {
-  padding-bottom: 7.5rem;
+.btn2:focus {
+  box-shadow: none;
+  outline: none;
 }
-
-#App .container footer a {
-  display: inline-block;
-  margin: 2rem 1rem 0 0;
+.btn3 {
+  height: 35px;
+  width: 120px;
+  border: none;
+  background-color: #fd8300;
+  font-size: 12px;
+  color: #fff;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn3:hover {
+  background-color: #165f12;
+}
+.btn3:focus {
+  box-shadow: none;
+  outline: none;
+}
+.navbar-brand {
+  font-weight: 700;
+  font-size: 22px;
+}
+.go {
+  color: #119cff;
+}
+.home {
+  color: #119cff;
+}
+.nav-item {
+  font-weight: 500;
+  color: #000000;
+}
+.heading {
+  font-weight: 700;
+  font-size: 35px;
+}
+.text {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f1113b8;
+}
+.text1 {
+  color: #7f858a;
+  font-size: 13px;
+  font-weight: 500;
+}
+.buttonitems {
+  font-size: 12px;
+  color: #179dfe;
+  font-weight: 500;
+}
+.card2 {
+  background-color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+}
+.stellar {
+  font-size: 16px;
+  font-weight: 600;
+}
+.hosting {
+  font-size: 12px;
+  color: #bac3ce;
+}
+.price {
+  font-size: 25px;
+  font-weight: 700;
+}
+.small {
+  font-size: 13px;
+}
+.year {
+  font-size: 13px;
+  color: #119cff;
 }
