@@ -16,7 +16,6 @@ function EthProvider({ children }) {
       const { abi: myTokenSaleAbi } = myTokenSale;
       const { abi: myTokenAbi } = myToken;
       const { abi: kycAbi } = kycContract;
-
       if (networkID === +REACT_APP_NETWORK_ID) {
         let myTokenAddress,
           myTokenSaleAddress,
@@ -45,13 +44,10 @@ function EthProvider({ children }) {
             userTokens = await tokenInstance.methods
               .balanceOf(accounts[0])
               .call();
-
             dispatch({
-              type: actions.init,
+              type: actions.updateToken,
               data: {
-                ...state,
                 userTokens,
-                loaded: true,
               },
             });
           }
@@ -115,7 +111,6 @@ function EthProvider({ children }) {
     };
   }, [init, state.artifact]);
 
-  console.log(state);
   if (!state.loaded) return <h1>loading 2 ....</h1>;
   return (
     <EthContext.Provider

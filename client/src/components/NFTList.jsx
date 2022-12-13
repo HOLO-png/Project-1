@@ -102,9 +102,9 @@ function NFTList(props) {
     <NFTListStyle>
       <h1 className="nft-list">NFTs List</h1>
       <div className="wrapper" style={{ gap: "20px" }}>
-        {nfts.map((nft) => {
+        {nfts.map((nft, i) => {
           return (
-            <div className="card text-center">
+            <div className="card text-center" key={i}>
               <div className="image">
                 <img src={nft.image} width="300" alt="" />
               </div>

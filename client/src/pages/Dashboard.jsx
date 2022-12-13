@@ -33,7 +33,7 @@ function Dashboard(props) {
       data.map(async (i) => {
         const tokenUri = await contract.tokenURI(i.tokenId);
         const meta = await axios.get(tokenUri);
-        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
+        let price = ethers.utils.formatUnits(i.price.toString(), "wei");
         let item = {
           price,
           tokenId: i.tokenId.toNumber(),

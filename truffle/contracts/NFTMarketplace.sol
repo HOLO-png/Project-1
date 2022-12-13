@@ -4,8 +4,15 @@ pragma solidity >=0.6.0 <0.9.0;
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "./MyToken.sol";
+import "./MyTokenSale.sol";
 
 contract NFTMarketplace is ERC721URIStorage {
+    event SellToken(address seller, uint256 theAmount, uint256);
+    MyToken public token;
+    MyTokenSale public myTokenSale;
+
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     Counters.Counter private _itemsSold;
@@ -122,6 +129,7 @@ contract NFTMarketplace is ERC721URIStorage {
         idToMarketItem[tokenId].seller = payable(address(0));
         _itemsSold.increment();
         _transfer(address(this), msg.sender, tokenId);
+        // myTokenSale.sell(price);
         payable(owner).transfer(listingPrice);
         payable(seller).transfer(msg.value);
     }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useEffect } from "react";
 import Intro from "../components/Intro";
 import axios from "axios";
@@ -8,10 +8,12 @@ import NFTList from "../components/NFTList";
 import { nftMarketAddress } from "../config";
 import { auth } from "./CreateNFTs";
 import Web3Modal from "web3modal";
+import { EthContext } from "../contexts/EthContext";
 
 function Home(props) {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
+  const { state } = useContext(EthContext);
 
   useEffect(() => {
     loadNFTs();
@@ -44,7 +46,8 @@ function Home(props) {
           },
           mode: "no-cors",
         });
-        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
+        let price = ethers.utils.formatUnits(i.price.toString(), "wei");
+
         let item = {
           price,
           tokenId: i.tokenId.toNumber(),
@@ -54,6 +57,7 @@ function Home(props) {
           name: meta.data.name,
           description: meta.data.description,
         };
+        console.log(item);
         return item;
       })
     );
@@ -73,12 +77,18 @@ function Home(props) {
       signer
     );
 
-    const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
-    const transaction = await contract.createMarketSale(nft.tokenId, {
-      value: price,
-    });
-    await transaction.wait();
-    loadNFTs();
+    try {
+      const price = ethers.utils.parseUnits(nft.price.toString(), "wei");
+      // const transaction = await contract.createMarketSale(nft.tokenId, {
+      //   value: price,
+      // });
+      // await transaction.wait();
+      console.log(+price);
+      await state.tokenSaleInstance.methods.sell(+price).call();
+      loadNFTs();
+    } catch (err) {
+      console.log("err: ", err);
+    }
   }
 
   return (

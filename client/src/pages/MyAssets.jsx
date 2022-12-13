@@ -114,7 +114,7 @@ function MyAssets(props) {
       data.map(async (i) => {
         const tokenURI = await marketplaceContract.tokenURI(i.tokenId);
         const meta = await axios.get(tokenURI);
-        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
+        let price = ethers.utils.formatUnits(i.price.toString(), "wei");
         let item = {
           price,
           image: meta.data.image,
@@ -133,7 +133,6 @@ function MyAssets(props) {
   }
 
   function listNFT(nft) {
-    console.log("nft:", nft);
     navigate(`/resell-nft?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`);
   }
   if (loadingState === "loaded" && !nfts.length)
@@ -144,35 +143,35 @@ function MyAssets(props) {
       <h1 style={{ textAlign: "center" }}>My NFTs</h1>
       <MyAssetsStyle className="flex justify-center height d-flex justify-content-center align-items-center">
         {nfts.map((nft, i) => (
-          <div class="card p-3" key={i}>
-            <div class="d-flex justify-content-between align-items-center ">
-              <div class="mt-2">
-                <h4 class="text-uppercase">NFT</h4>
-                <div class="mt-5">
-                  <h5 class="text-uppercase mb-0">{nft.name}</h5>
-                  <h1 class="main-heading mt-0">{nft.price} ETH</h1>
-                  <div class="d-flex flex-row user-ratings">
-                    <div class="ratings">
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
+          <div className="card p-3" key={i}>
+            <div className="d-flex justify-content-between align-items-center ">
+              <div className="mt-2">
+                <h4 className="text-uppercase">NFT</h4>
+                <div className="mt-5">
+                  <h5 className="text-uppercase mb-0">{nft.name}</h5>
+                  <h1 className="main-heading mt-0">{nft.price} ETH</h1>
+                  <div className="d-flex flex-row user-ratings">
+                    <div className="ratings">
+                      <i className="fa fa-star"></i>
+                      <i className="fa fa-star"></i>
+                      <i className="fa fa-star"></i>
+                      <i className="fa fa-star"></i>
                     </div>
-                    <h6 class="text-muted ml-1">4/5</h6>
+                    <h6 className="text-muted ml-1">4/5</h6>
                   </div>
                 </div>
               </div>
-              <div class="image">
+              <div className="image">
                 <img src={nft.image} width="200" alt="" />
               </div>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center mt-2 mb-2 card-content">
+            <div className="d-flex justify-content-between align-items-center mt-2 mb-2 card-content">
               <span>{nft.seller}</span>
               <span>{nft.owner}</span>
               <p>{nft.description}</p>
 
-              <div class="colors">
+              <div className="colors">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -180,7 +179,7 @@ function MyAssets(props) {
               </div>
             </div>
 
-            <button class="btn btn-danger" onClick={() => listNFT(nft)}>
+            <button className="btn btn-danger" onClick={() => listNFT(nft)}>
               List
             </button>
           </div>

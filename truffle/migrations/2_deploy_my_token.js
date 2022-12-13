@@ -15,7 +15,8 @@ module.exports = async function (deployer) {
     1,
     addr[0],
     MyToken.address,
-    MyKycContract.address
+    MyKycContract.address,
+    MyToken.address
   );
 
   let instance = await MyToken.deployed();

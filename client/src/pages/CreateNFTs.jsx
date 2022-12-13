@@ -186,21 +186,26 @@ function CreateNFTs(props) {
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    const price = ethers.utils.parseUnits(formInput.price, "ether");
+    const price = ethers.utils.parseUnits(formInput.price, "wei");
 
     let contract = new ethers.Contract(
       nftMarketAddress,
       NFTMarketplace.abi,
       signer
     );
-    let listingPrice = await contract.getListingPrice();
-    listingPrice = listingPrice.toString();
-    let transaction = await contract.createToken(url, price, {
-      value: listingPrice,
-    });
-    await transaction.wait();
 
-    navigate("/");
+    try {
+      let listingPrice = await contract.getListingPrice();
+      listingPrice = listingPrice.toString();
+      let transaction = await contract.createToken(url, price, {
+        value: listingPrice,
+      });
+      await transaction.wait();
+
+      navigate("/");
+    } catch (err) {
+      console.log("err: ", err);
+    }
   }
 
   return (

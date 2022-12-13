@@ -32,7 +32,7 @@ function ReSellNFT(props) {
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    const priceFormatted = ethers.utils.parseUnits(formInput.price, "ether");
+    const priceFormatted = ethers.utils.parseUnits(formInput.price, "wei");
     let contract = new ethers.Contract(
       nftMarketAddress,
       NFTMarketplace.abi,
