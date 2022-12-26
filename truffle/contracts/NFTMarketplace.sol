@@ -21,6 +21,19 @@ contract NFTMarketplace is ERC721URIStorage {
     address payable owner;
 
     mapping(uint256 => MarketItem) private idToMarketItem;
+    uint256 public currentTokenId = 1;
+    string[] public tokenSymbols;
+    mapping(string => Token) public tokens;
+    uint256 public ethUsdPrice;
+
+    struct Token {
+        uint256 tokenId;
+        string name;
+        string symbol;
+        address tokenAddress;
+        uint256 usdPrice;
+        uint256 ethPrice;
+    }
 
     struct MarketItem {
         uint256 tokenId;
@@ -38,8 +51,31 @@ contract NFTMarketplace is ERC721URIStorage {
         bool sold
     );
 
-    constructor() ERC721("Metaverse Tokens", "METT") {
+    constructor(uint256 currentEthPrice)
+        payable
+        ERC721("Metaverse Tokens", "METT")
+    {
         owner = payable(msg.sender);
+        ethUsdPrice = currentEthPrice;
+    }
+
+    function addToken(
+        string calldata name,
+        string calldata symbol,
+        address tokenAddress,
+        uint256 usdPrice
+    ) external onlyOwner {
+        tokenSymbols.push(symbol);
+        tokens[symbol] = Token(
+            currentTokenId,
+            name,
+            symbol,
+            tokenAddress,
+            usdPrice,
+            usdPrice / ethUsdPrice
+        );
+
+        currentTokenId += 1;
     }
 
     /* Updates the listing price of the contract */
@@ -57,21 +93,25 @@ contract NFTMarketplace is ERC721URIStorage {
     }
 
     /* Mints a token and lists it in the marketplace */
-    function createToken(string memory tokenURI, uint256 price)
-        public
-        payable
-        returns (uint256)
-    {
+    function createToken(
+        string memory tokenURI,
+        string calldata symbol,
+        uint256 price
+    ) public payable returns (uint256) {
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
 
         _mint(msg.sender, newTokenId);
         _setTokenURI(newTokenId, tokenURI);
-        createMarketItem(newTokenId, price);
+        createMarketItem(newTokenId, symbol, price);
         return newTokenId;
     }
 
-    function createMarketItem(uint256 tokenId, uint256 price) private {
+    function createMarketItem(
+        uint256 tokenId,
+        string calldata symbol,
+        uint256 price
+    ) private {
         require(price > 0, "Price must be at least 1 wei");
         require(
             msg.value == listingPrice,
@@ -86,7 +126,8 @@ contract NFTMarketplace is ERC721URIStorage {
             false
         );
 
-        _transfer(msg.sender, address(this), tokenId);
+        IERC20(tokens[symbol].tokenAddress).transfer(msg.sender, price);
+
         emit MarketItemCreated(
             tokenId,
             msg.sender,
@@ -117,19 +158,29 @@ contract NFTMarketplace is ERC721URIStorage {
 
     /* Creates the sale of a marketplace item */
     /* Transfers ownership of the item, as well as funds between parties */
-    function createMarketSale(uint256 tokenId) public payable {
+    function createMarketSale(
+        uint256 tokenId,
+        string calldata symbol,
+        uint256 tokenQuantity
+    ) public payable {
         uint256 price = idToMarketItem[tokenId].price;
         address seller = idToMarketItem[tokenId].seller;
         require(
             msg.value == price,
             "Please submit the asking price in order to complete the purchase"
         );
+
         idToMarketItem[tokenId].owner = payable(msg.sender);
         idToMarketItem[tokenId].sold = true;
         idToMarketItem[tokenId].seller = payable(address(0));
         _itemsSold.increment();
-        _transfer(address(this), msg.sender, tokenId);
-        // myTokenSale.sell(price);
+
+        IERC20(tokens[symbol].tokenAddress).transferFrom(
+            msg.sender,
+            seller,
+            tokenQuantity
+        );
+
         payable(owner).transfer(listingPrice);
         payable(seller).transfer(msg.value);
     }
@@ -198,5 +249,10 @@ contract NFTMarketplace is ERC721URIStorage {
             }
         }
         return items;
+    }
+
+    modifier onlyOwner() {
+        require(owner == msg.sender, "Only owner may call this function");
+        _;
     }
 }

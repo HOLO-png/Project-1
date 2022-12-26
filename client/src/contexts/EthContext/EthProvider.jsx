@@ -30,6 +30,8 @@ function EthProvider({ children }) {
           myTokenSaleAddress = myTokenSale.networks[networkID].address;
           kycAddress = kycContract.networks[networkID].address;
           tokenInstance = new web3.eth.Contract(myTokenAbi, myTokenAddress);
+          console.log(tokenInstance);
+
           tokenSaleInstance = new web3.eth.Contract(
             myTokenSaleAbi,
             myTokenSaleAddress

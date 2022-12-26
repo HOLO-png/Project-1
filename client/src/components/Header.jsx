@@ -1,10 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Web3 from "web3";
 import { useReducer } from "react";
-import { actions, initialState, reducer } from "../contexts/EthContext";
+import {
+  actions,
+  EthContext,
+  initialState,
+  reducer,
+} from "../contexts/EthContext";
+import Login from "./Intro/Login";
 
 const getWeb3 = async () => {
   if (window.ethereum) {
@@ -58,6 +63,7 @@ const navbarItem = [
 
 function Header(props) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const auth = JSON.parse(localStorage.getItem("auth"));
 
   const handleConnectMetamask = async () => {
     const web3 = await getWeb3();
@@ -109,13 +115,18 @@ function Header(props) {
               </li>
             ))}
           </ul>
-          {state.userAddress ? (
-            state.userAddress
-          ) : (
-            <div className="btn btn-dark" onClick={handleConnectMetamask}>
-              Sign up
-            </div>
+          {auth?.username || (
+            <button
+              type="button"
+              className="btn btn-primary"
+              data-toggle="modal"
+              data-target="#exampleModal"
+              onClick={handleConnectMetamask}
+            >
+              Login
+            </button>
           )}
+          <Login userAddress={state.userAddress} />
         </div>
       </div>
     </NavHeader>

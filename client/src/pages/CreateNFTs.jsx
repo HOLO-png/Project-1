@@ -197,7 +197,8 @@ function CreateNFTs(props) {
     try {
       let listingPrice = await contract.getListingPrice();
       listingPrice = listingPrice.toString();
-      let transaction = await contract.createToken(url, price, {
+
+      let transaction = await contract.createToken(url, "PTDQ", price, {
         value: listingPrice,
       });
       await transaction.wait();

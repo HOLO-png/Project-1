@@ -12,6 +12,10 @@ const initialState = {
   tokenSaleAddress: null,
   userTokens: 1,
   userAddress: "",
+  auth: {
+    username: JSON.parse(localStorage.getItem("auth"))?.username || "",
+    userAddress: JSON.parse(localStorage.getItem("auth"))?.userAddress || "",
+  },
 };
 
 const reducer = (state, action) => {
@@ -21,6 +25,16 @@ const reducer = (state, action) => {
       return { ...state, ...data };
     case actions.updateToken:
       return { ...state, ...data };
+    case actions.loginSuccess:
+      return { ...state, ...data };
+    case actions.logout:
+      return {
+        ...state,
+        auth: {
+          username: "",
+          userAddress: "",
+        },
+      };
     default:
       throw new Error("Undefined reducer action type");
   }

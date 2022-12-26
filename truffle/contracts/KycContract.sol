@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.6.1 <0.9.0;
 
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
@@ -5,11 +6,11 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 contract KycContract is Ownable {
     mapping(address => bool) allowed;
 
-    function setKycCompleted(address _addr) public onlyOwner {
+    function setKycCompleted(address _addr) public {
         allowed[_addr] = true;
     }
 
-    function setKycRevoked(address _addr) public onlyOwner {
+    function setKycRevoked(address _addr) public {
         allowed[_addr] = false;
     }
 

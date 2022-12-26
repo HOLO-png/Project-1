@@ -13,7 +13,9 @@ import { EthContext } from "../contexts/EthContext";
 function Home(props) {
   const [nfts, setNfts] = useState([]);
   const [loadingState, setLoadingState] = useState("not-loaded");
-  const { state } = useContext(EthContext);
+  const {
+    state: { accounts, contracts, web3 },
+  } = useContext(EthContext);
 
   useEffect(() => {
     loadNFTs();
@@ -57,7 +59,6 @@ function Home(props) {
           name: meta.data.name,
           description: meta.data.description,
         };
-        console.log(item);
         return item;
       })
     );
@@ -78,13 +79,23 @@ function Home(props) {
     );
 
     try {
+      const stakeTokenQuantityWei = web3.utils.toWei(nft.price, "ether");
       const price = ethers.utils.parseUnits(nft.price.toString(), "wei");
-      // const transaction = await contract.createMarketSale(nft.tokenId, {
-      //   value: price,
-      // });
-      // await transaction.wait();
-      console.log(+price);
-      await state.tokenSaleInstance.methods.sell(+price).call();
+      await contracts.tokenInstance.methods
+        .approve(nftMarketAddress, stakeTokenQuantityWei)
+        .send({
+          from: accounts[0],
+        });
+
+      const transaction = await contract.createMarketSale(
+        nft.tokenId,
+        "PTDQ",
+        nft.price,
+        {
+          value: price,
+        }
+      );
+      await transaction.wait();
       loadNFTs();
     } catch (err) {
       console.log("err: ", err);

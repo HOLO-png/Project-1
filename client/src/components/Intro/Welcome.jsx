@@ -160,11 +160,17 @@ function Welcome() {
 
   const handleBuyTokens = async () => {
     if (state.tokenInstance !== undefined) {
-      if (inputNFT) {
-        await state.tokenSaleInstance.methods.buy().send({
-          from: state.accounts[0],
-          value: state.web3.utils.toWei(inputNFT, "wei"),
-        });
+      if (inputNFT >= 0) {
+        try {
+          await state.tokenSaleInstance.methods
+            .buyTokens(state.accounts[0])
+            .send({
+              from: state.accounts[0],
+              value: state.web3.utils.toWei(inputNFT, "wei"),
+            });
+        } catch (error) {
+          console.log(error);
+        }
       } else {
         alert("Number not 0");
       }

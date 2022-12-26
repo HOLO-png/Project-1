@@ -25,6 +25,7 @@ function ReSellNFT(props) {
     const meta = await axios.get(tokenURI);
     updateFormInput((state) => ({ ...state, image: meta.data.image }));
   }
+
   async function listNFTForSale() {
     if (!price) return;
     const web3Modal = new Web3Modal();
@@ -48,6 +49,7 @@ function ReSellNFT(props) {
 
     navigate("/");
   }
+
   return (
     <div className="flex justify-center">
       <div className="w-1/2 flex flex-col pb-12">
