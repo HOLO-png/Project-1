@@ -126,7 +126,7 @@ contract NFTMarketplace is ERC721URIStorage {
             false
         );
 
-        IERC20(tokens[symbol].tokenAddress).transfer(msg.sender, price);
+        IERC20(tokens[symbol].tokenAddress).transfer(address(this), 2);
 
         emit MarketItemCreated(
             tokenId,

@@ -8,30 +8,36 @@ const INITIAL_TOKENS = process.env.INITIAL_TOKENS;
 
 module.exports = async function (deployer) {
   let addr = await web3.eth.getAccounts();
-  const MyTokenDeploy = await MyToken.deployed();
-  const MyKycContractDeploy = await MyKycContract.deployed();
 
+  // =======================================
+
+  await deployer.deploy(MyKycContract);
+  await deployer.deploy(MyToken, process.env.INITIAL_TOKENS);
   await deployer.deploy(
     MyTokenSale,
     1,
     addr[0],
-    MyTokenDeploy.address,
-    MyKycContractDeploy.address
+    MyToken.address,
+    MyKycContract.address
   );
+
+  let instance = await MyToken.deployed();
+
+  // --------------------------------------
 
   const MyNTFMarketplaceDeploy = await deployer.deploy(
     MyNTFMarketplace,
-    INITIAL_TOKENS
+    +process.env.INITIAL_TOKENS
   );
 
   await MyNTFMarketplaceDeploy.addToken(
     "Phung Truong Dinh Quan Token",
     "PTDQ",
-    MyTokenDeploy.address,
+    MyToken.address,
     867
   );
 
-  await MyTokenDeploy.transfer(MyNTFMarketplaceDeploy.address, INITIAL_TOKENS);
-  await MyTokenDeploy.transfer(MyTokenSale.address, INITIAL_TOKENS);
-  await MyTokenDeploy.approve(MyNTFMarketplaceDeploy.address, INITIAL_TOKENS);
+  await instance.transfer(MyNTFMarketplaceDeploy.address, 1000000);
+  await instance.transfer(MyTokenSale.address, 1000000);
+  await instance.approve(MyNTFMarketplaceDeploy.address, 1000000);
 };

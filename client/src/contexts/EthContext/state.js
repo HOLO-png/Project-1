@@ -1,5 +1,9 @@
 const actions = {
   init: "INIT",
+  loginSuccess: "LOGIN_SUCCESS",
+  logout: "LOGOUT",
+  getAuth: "GET_AUTH",
+  updateToken: "UPDATE_TOKEN",
 };
 
 const initialState = {
@@ -23,10 +27,12 @@ const reducer = (state, action) => {
   switch (type) {
     case actions.init:
       return { ...state, ...data };
+    case actions.getAuth:
+      return state;
     case actions.updateToken:
       return { ...state, ...data };
     case actions.loginSuccess:
-      return { ...state, ...data };
+      return { ...state, auth: data.auth };
     case actions.logout:
       return {
         ...state,

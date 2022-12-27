@@ -1,28 +1,21 @@
 import React, { useContext, useState } from "react";
-import { useReducer } from "react";
-import {
-  actions,
-  EthContext,
-  initialState,
-  reducer,
-} from "../../contexts/EthContext";
+import { EthContext } from "../../contexts/EthContext";
 
 function Login(props) {
-  const { userAddress } = props;
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const { userAddress, handleLoginAuth } = props;
   const {
-    state: { contracts, accounts },
+    state: { contracts },
   } = useContext(EthContext);
-
   const [input, setInput] = useState({
     username: "",
   });
+
   const handleLogin = async () => {
     if (input.username && userAddress) {
       try {
         await contracts.kycInstance.methods
           .setKycCompleted(userAddress)
-          .send({ from: accounts[0] });
+          .send({ from: userAddress });
         localStorage.setItem(
           "auth",
           JSON.stringify({
@@ -30,16 +23,7 @@ function Login(props) {
             userAddress: userAddress,
           })
         );
-        dispatch({
-          type: actions.loginSuccess,
-          data: {
-            ...state,
-            auth: {
-              username: input.username,
-              userAddress: userAddress,
-            },
-          },
-        });
+        handleLoginAuth(input.username, userAddress);
       } catch (err) {
         console.log("login failed", err);
       }
@@ -96,6 +80,7 @@ function Login(props) {
                 <button
                   type="submit"
                   className="btn btn-default"
+                  data-dismiss="modal"
                   onClick={handleLogin}
                 >
                   Submit

@@ -10,6 +10,7 @@ import {
   reducer,
 } from "../contexts/EthContext";
 import Login from "./Intro/Login";
+import { useEffect } from "react";
 
 const getWeb3 = async () => {
   if (window.ethereum) {
@@ -63,7 +64,28 @@ const navbarItem = [
 
 function Header(props) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const auth = JSON.parse(localStorage.getItem("auth"));
+
+  const handleLoginAuth = (username, address) => {
+    dispatch({
+      type: actions.loginSuccess,
+      data: {
+        ...state,
+        auth: {
+          username: username,
+          userAddress: address,
+        },
+      },
+    });
+  };
+
+  useEffect(() => {
+    window.ethereum.on("accountsChanged", function (accounts) {
+      localStorage.clear();
+      dispatch({
+        type: actions.logout,
+      });
+    });
+  });
 
   const handleConnectMetamask = async () => {
     const web3 = await getWeb3();
@@ -115,7 +137,7 @@ function Header(props) {
               </li>
             ))}
           </ul>
-          {auth?.username || (
+          {state.auth?.username || (
             <button
               type="button"
               className="btn btn-primary"
@@ -126,7 +148,10 @@ function Header(props) {
               Login
             </button>
           )}
-          <Login userAddress={state.userAddress} />
+          <Login
+            userAddress={state.userAddress}
+            handleLoginAuth={handleLoginAuth}
+          />
         </div>
       </div>
     </NavHeader>

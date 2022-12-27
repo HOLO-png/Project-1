@@ -9,7 +9,6 @@ import "./MyToken.sol";
 
 contract MyTokenSale is Crowdsale, Ownable {
     KycContract kyc;
-    MyToken public myToken;
     uint256 public constant tokensPerEth = 100;
 
     event BuyToken(address buyer, uint256 ethAmount, uint256 tokenAmount);

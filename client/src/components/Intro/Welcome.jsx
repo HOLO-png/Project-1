@@ -147,7 +147,7 @@ function Welcome() {
 
   const handleKycWhiteListSubmit = async () => {
     if (state.contracts && state.accounts) {
-      if (kycAddress.length > 15) {
+      if (kycAddress?.length > 15) {
         await state.contracts.kycInstance.methods
           .setKycCompleted(kycAddress)
           .send({ from: state.accounts[0] });
